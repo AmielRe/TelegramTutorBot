@@ -14,7 +14,7 @@ from scheduler import get_SplitedFreeSlotsWithEvent
 import re
 import api_key
 api_key=api_key.api['api_key']
-
+    
 def check_email(email):
     regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'
     if(re.search(regex,email)):  
@@ -27,7 +27,13 @@ def check_email(email):
 def validateDate(date_text):
     try:
         datetime.datetime.strptime(date_text, '%d-%m-%Y %H:%M:%S')
-        return True
+        freeSlots = get_SplitedFreeSlots()
+        tempDate = []
+        tempDate.append("{0}".format(date_text))
+        if(tempDate in freeSlots):
+            return True
+        else:
+            return False
     except ValueError:
         return False
 
@@ -38,8 +44,9 @@ def getLastMessage():
     last_msg=data['result'][len(data['result'])-1]['message']['text']
     chat_id=data['result'][len(data['result'])-1]['message']['chat']['id']
     update_id=data['result'][len(data['result'])-1]['update_id']
+    user_name=data['result'][len(data['result'])-1]['message']['from']['first_name']
     if len(data['result']) < 100:
-        return last_msg,chat_id,update_id
+        return last_msg,chat_id,update_id,user_name
     else:
         print('offseting updates limit...')
         url = "https://api.telegram.org/bot{}/getUpdates?offset={}".format(api_key,update_id)
@@ -48,7 +55,8 @@ def getLastMessage():
         last_msg=data['result'][len(data['result'])-1]['message']['text']
         chat_id=data['result'][len(data['result'])-1]['message']['chat']['id']
         update_id=data['result'][len(data['result'])-1]['update_id']
-        return last_msg,chat_id,update_id
+        user_name=data['result'][len(data['result'])-1]['message']['from']['first_name']
+        return last_msg,chat_id,update_id,user_name
 
 
 def sendMessage(chat_id,text_message):
@@ -80,9 +88,9 @@ def sendInlineMessageForBookingTime(chat_id):
 
 def run():
     update_id_for_booking_of_time_slot=''
-    prev_last_msg,chat_id,prev_update_id=getLastMessage()
+    prev_last_msg,chat_id,prev_update_id,user_name=getLastMessage()
     while True:
-        current_last_msg,chat_id,current_update_id=getLastMessage()
+        current_last_msg,chat_id,current_update_id,user_name=getLastMessage()
         if prev_last_msg==current_last_msg and current_update_id==prev_update_id:
             print('Listen')
             events = get_availableSlots()
@@ -111,9 +119,10 @@ def run():
                     delete_availableSlot(booking_time)
                     for currDate in dates:
                         placeFreeTimeSlot(currDate[0])
-                    response=book_timeslot(booking_time,input_email)
+                    response=book_timeslot(booking_time,input_email,user_name)
                     if response == True:
                         sendMessage(chat_id,"שיעור נקבע! נתראה ב - " + str(booking_time))
+                        sendMessage("860442422", "שיעור חדש נקבע עם " + str(user_name) + " ב - " + str(booking_time))
                         continue
                     else:
                         update_id_for_booking_of_time_slot=''

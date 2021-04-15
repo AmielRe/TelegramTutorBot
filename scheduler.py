@@ -100,7 +100,7 @@ def placeFreeTimeSlot(timeSlot):
         return True
     
     
-def book_timeslot(booking_time,input_email):
+def book_timeslot(booking_time,input_email,input_name):
     """Shows basic usage of the Google Calendar API.
     Prints the start and name of the next 10 events on the user's calendar.
     """
@@ -142,7 +142,7 @@ def book_timeslot(booking_time,input_email):
     if not events:
         event = {
         'summary': 'שיעור פרטי',
-        'description': str("שיעור פרטי"),
+        'description': str("שיעור פרטי") + " עם " + str(input_name),
         'start': {
         'dateTime': start_time,
         'timeZone': 'Asia/Jerusalem',
@@ -179,7 +179,7 @@ def book_timeslot(booking_time,input_email):
         # -------------------- Break out of for loop if there are no apppointment that has the same time ----------
         event = {
         'summary': 'שיעור פרטי',
-        'description': str("שיעור פרטי"),
+        'description': str("שיעור פרטי") + " עם " + str(input_name),
         'start': {
         'dateTime': start_time,
         'timeZone': 'Asia/Jerusalem',
