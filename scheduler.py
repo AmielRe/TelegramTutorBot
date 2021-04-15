@@ -260,11 +260,11 @@ def get_availableSlots():
             pickle.dump(creds, token)
 
     service = build('calendar', 'v3', credentials=creds)
-
+    
     # Call the Calendar API
     now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
     events_result = service.events().list(calendarId='primary', timeMin=now,
-                                        maxResults=10, singleEvents=True,
+                                        maxResults=100, singleEvents=True,
                                         orderBy='startTime').execute()
     events = events_result.get('items', [])
     eventsFinal = []

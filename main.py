@@ -65,7 +65,7 @@ def sendMessage(chat_id,text_message):
     return response
 
 def sendInlineMessageForService(chat_id):
-    text_message='שלום! אני הבוט שלך עבור קביעת שיעורים פרטיים עם עדן!\n\nאתה יכול לשלוט בי באמצעות הפקודות:\n\n\"שלום\" - להתחיל לדבר עם הבוט\n\"די\" - להפסיק לדבר עם הבוט.\n'
+    text_message="שלום! אני הבוט שלך עבור קביעת שיעורים פרטיים עם עדן!\n\nאתה יכול לשלוט בי באמצעות הפקודות:\n\n\"שלום\" - להתחיל לדבר עם הבוט\n\"די\" - להפסיק לדבר עם הבוט.\n"
     keyboard={'keyboard':[
                         [{'text':'שנה שיעור'},{'text':'בטל שיעור'}],
                         [{'text':'שיעור חדש'}]]}
@@ -89,7 +89,8 @@ def sendInlineMessageForBookingTime(chat_id):
         return response
 
 def run():
-    logf = open("C:\\Users\\Public\\BotLog.txt", "w")
+    logf = open("BotLog.txt", "w")
+    logf.close()
     update_id_for_booking_of_time_slot=''
     prev_last_msg,chat_id,prev_update_id,user_name=getLastMessage()
     while True:
@@ -100,18 +101,9 @@ def run():
                 continue
             else:
                 if current_last_msg=='/start' or current_last_msg=='start' or current_last_msg=='היי' or current_last_msg=='שלום':
-                    sendInlineMessageForService(chat_id)  
-                    logf = open("C:\\Users\\Public\\BotLog.txt", "w")
-                    logf.write("hey")
-                    logf.close()
+                    sendInlineMessageForService(chat_id)
                 if current_last_msg in ['בטל שיעור','שנה שיעור','שיעור חדש']:
-                    logf = open("C:\\Users\\Public\\BotLog.txt", "w")
-                    logf.write("1")
-                    logf.close()
                     sendInlineMessageForBookingTime(chat_id)
-                    logf = open("C:\\Users\\Public\\BotLog.txt", "w")
-                    logf.write("2")
-                    logf.close()
                 if validateDate(current_last_msg):
                     booking_time=current_last_msg
                     update_id_for_booking_of_time_slot=current_update_id
@@ -146,8 +138,8 @@ def run():
             prev_last_msg=current_last_msg
             prev_update_id=current_update_id
         except Exception as e:
-            logf = open("C:\\Users\\Public\\BotLog.txt", "w")
-            logf.write("Fail: {0}\n".format(str(e)))
+            logf = open("BotLog.txt", "a+")
+            logf.write(datetime.datetime.now().strftime("%H:%M:%S") + ": Fail: {0}\n".format(str(e)))
             logf.close()
             continue
             
