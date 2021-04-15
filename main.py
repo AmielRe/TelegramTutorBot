@@ -113,7 +113,7 @@ def run():
                         placeFreeTimeSlot(currDate[0])
                     response=book_timeslot(booking_time,input_email)
                     if response == True:
-                        sendMessage(chat_id," - שיעור נקבע! נתראה ב {booking_time}")
+                        sendMessage(chat_id,"שיעור נקבע! נתראה ב - " + str(booking_time))
                         continue
                     else:
                         update_id_for_booking_of_time_slot=''

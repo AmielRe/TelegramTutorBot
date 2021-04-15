@@ -142,7 +142,6 @@ def book_timeslot(booking_time,input_email):
     if not events:
         event = {
         'summary': 'שיעור פרטי',
-        'location': 'ישראל',
         'description': str("שיעור פרטי"),
         'start': {
         'dateTime': start_time,
@@ -180,7 +179,6 @@ def book_timeslot(booking_time,input_email):
         # -------------------- Break out of for loop if there are no apppointment that has the same time ----------
         event = {
         'summary': 'שיעור פרטי',
-        'location': 'ישראל',
         'description': str("שיעור פרטי"),
         'start': {
         'dateTime': start_time,
